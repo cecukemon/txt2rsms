@@ -1,0 +1,15 @@
+2014 05 21
+Primaere Aenderung: Nur Snapshot von XXX fuer YYY Arbeiten morgen
+
+
+2014 06 11
+Gibt noch mehr OpenSSL / GnuTLS updates.
+Stelle mich auf woechentliches Patchen ein.
+Entsprechend Ansible Scripte verbessern, sie sind noch zu reboot-happy.
+Fuer SSL braucht man eh service restart, aber dennoch.
+
+2014 08 13
+Heute ganz viel Code geschrieben
+das war sicher eine gute Sache
+Dennoch sollte man die Bugs noch fixen
+
