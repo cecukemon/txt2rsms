@@ -3,6 +3,7 @@
 use strict;
 
 use Getopt::Long;
+use POSIX qw(strftime);
 
 my $maxchar = 25;
 
@@ -104,32 +105,34 @@ sub make_filename {
   return $date .'-'.$filename_postfix.'.md';
 }
 
+sub today {
+  return strftime("%Y-%m-%d", localtime());
+}
+
 sub similar_file_exists {
   my ($filename) = @_;
 
+  # I guess it would be nice to cache the file list at startup ..
   opendir (my $dh, $outdir);
-  while(readdir $dh){
-    next if(! defined $_ || $_ =~ /^./);
-    if($_ eq $filename && -C $outdir.'/'.$_ >= 1){
+  # no while loop, stay compatible with perl < 5.12
+  my @files = readdir($dh);
+  foreach (@files){
+    next if(! defined $_ || $_ =~ /^\./);
+
+    my ($date, $title) = $filename =~ /^(\d\d\d\d-\d\d-\d\d)(.*)$/;
+    my $today = today();
+
+    if($date eq $today && $_ eq $filename){
+      print STDOUT "$filename existiert bereits und stammt von heute, wird ueberschrieben.\n";
+      return 0;
+    } elsif($date ne $today && $_ eq $filename){
       print STDOUT "$filename existiert bereits und ist mindestens 1 Tag alt, wird uebersprungen.\n";
       return 1;
-    } elsif($_ eq $filename && -C $outdir.'/'.$_ < 1){
-      print STDOUT "$filename existiert bereits und ist weniger als 1 Tag alt, wird ueberschrieben.\n";
-      return 0;
-    }
+    } 
   }
   closedir($dh);
 
   return 0;
 }
-
-
-
-
-
-
-
-
-
 
 
